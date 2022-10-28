@@ -5,7 +5,8 @@ app.get("/users", function (req, res) {
   res.json({
     slackUsername: "zionxl",
     backend: true,
-    bio: "Tech advocate, Speaker ",
+    bio: "Tech advocate, Speaker, tiktoker ",
+    age: 28,
   });
 });
 app.listen(port, function () {
