@@ -2,11 +2,14 @@
   "name": "expressdev",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "nodeapp.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node nodeapp.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
