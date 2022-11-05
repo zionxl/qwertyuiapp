@@ -69,7 +69,7 @@ app.post("/", function (req, res) {
   res.json({
     slackUsername: "zionxl",
     operation_type: operation_type,
-    result: result,
+    result: parseInt(result),
   });
 });
 
