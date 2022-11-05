@@ -1,22 +1,46 @@
 const express = require("express");
+const port = process.env.PORT || 3000;
+
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded());
-let port = process.env.PORT || 3000;
+app.use(express.urlencoded({ extended: false }));
 
-app.post("/", function (req, res) {
-  let { x, y, operation_type } = req.body;
-  let xy = operation_type;
-  let alloperations = {
-    addition: x + y,
-    subtraction: x - y,
-    multiplication: x * y,
-  };
-
+app.post("/", (req, res) => {
+  let { operation_type, x, y } = req.body;
   let result;
 
-  console.log(operation_type);
+  if (typeof x != "number" || typeof y != "number") {
+    let arr = operation_type.split(" ");
+    let numberCount = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+      if (!isNaN(arr[i]) && numberCount < 2) {
+        if (numberCount === 0) {
+          x = arr[i];
+          console.log(arr[i]);
+        }
+        if (numberCount === 1) {
+          console.log(arr[i]);
+          y = arr[i];
+        }
+        numberCount++;
+      }
+    }
+  }
+
+  // console.log(x, y);
+
+  x = parseInt(x);
+  y = parseInt(y);
+
+  //   operations object
+  let operation = {
+    adddition: x + y,
+    subtraction: x - y,
+    multiplication: x * y,
+    division: x / y,
+  };
 
   //   additon: x + y,
   if (
@@ -25,7 +49,7 @@ app.post("/", function (req, res) {
     operation_type.includes("plus") ||
     operation_type.includes("+")
   ) {
-    result = alloperations.addition;
+    result = operation.adddition;
     operation_type = "addition";
   }
 
@@ -38,7 +62,7 @@ app.post("/", function (req, res) {
     operation_type.includes("take away") ||
     operation_type.includes("less")
   ) {
-    result = alloperations.subtraction;
+    result = operation.subtraction;
     operation_type = "subtraction";
   }
 
@@ -48,7 +72,7 @@ app.post("/", function (req, res) {
     operation_type.includes("*") ||
     operation_type.includes("times")
   ) {
-    result = alloperations.multiplication;
+    result = operation.multiplication;
     operation_type = "multiplication";
   }
 
@@ -58,21 +82,19 @@ app.post("/", function (req, res) {
     operation_type.includes("/") ||
     operation_type.includes("by")
   ) {
-    result = alloperations.division;
+    result = operation.division;
     operation_type = "division";
   } else {
-    result = "Invalid operation";
-    operation_type = "Invalid operation";
+    (result = "Invalid operation"), (operation_type = "Invalid operation");
   }
 
-  // operation.push(operation);
-  res.json({
+  res.setHeader("Content-Type", "application/json").json({
     slackUsername: "zionxl",
     operation_type: operation_type,
-    result: parseInt(result),
+    result: result,
   });
 });
 
-app.listen(port, function () {
-  console.log("nodejs running" + port);
+app.listen(port, () => {
+  console.log(`[stdout]: Server is up on port ${port}`);
 });
